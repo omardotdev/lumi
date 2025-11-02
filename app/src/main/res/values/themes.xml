@@ -1,0 +1,19 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Lumi" parent="Theme.Material3.DayNight">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Base application theme. -->c
+    </style>
+
+    <style name="ActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="background">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Lumi" parent="Base.Theme.Lumi">
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+        <item name="actionBarStyle">@style/ActionBar</item>
+    </style>
+</resources>
