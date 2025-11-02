@@ -18,7 +18,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -43,7 +43,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.omardotdev.lumi.ui.home.HomePage
-import com.omardotdev.lumi.ui.settings.SettingsPage
+import com.omardotdev.lumi.ui.settings.AboutPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
         val contentDescription: String
     ) {
         HOME("home", "Home", Icons.Default.Home, "Home"),
-        SETTINGS("settings", "Settings", Icons.Default.Settings, "Settings"),
+        ABOUT("about", "About", Icons.Default.Info, "About"),
     }
 
 
@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
                 composable(destination.route) {
                     when (destination) {
                         Destination.HOME -> HomePage()
-                        Destination.SETTINGS -> SettingsPage()
+                        Destination.ABOUT -> AboutPage()
                     }
                 }
             }

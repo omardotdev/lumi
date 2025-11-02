@@ -94,7 +94,7 @@ fun HomePage() {
         }
 
         Text(
-            "Welcome to Lumi! The cutest cat client for showing cat photos, There will be 2 buttons for either downloading or refreshing the image, and on top will be Minky :3",
+            "Welcome to Lumi! The cutest cat client for showing cat photos, There will be 2 buttons for either downloading or refreshing the image, and on top will be Minky.",
             fontSize = 16.sp
         )
     }

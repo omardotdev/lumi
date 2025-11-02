@@ -7,13 +7,14 @@ plugins {
 android {
     namespace = "com.omardotdev.lumi"
     compileSdk = 36
+    version = "1.1"
 
     defaultConfig {
         applicationId = "com.omardotdev.lumi"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,13 +29,20 @@ android {
             )
         }
     }
+
+    defaultConfig {
+        buildConfigField("String", "VERSION", "\"${defaultConfig.versionName}\"")
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+
     buildFeatures {
         viewBinding = true
         compose = true
+        buildConfig = true
     }
 }
 
