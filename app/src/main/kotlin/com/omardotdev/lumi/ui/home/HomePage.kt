@@ -108,7 +108,7 @@ private fun downloadImage(context: Context) {
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             .setAllowedOverRoaming(false)
             .setTitle("minky")
-            .setMimeType("image/jpeg") // Your file type. You can use this code to download other file types also.
+            .setMimeType("image/jpeg")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(
                 Environment.DIRECTORY_PICTURES,
