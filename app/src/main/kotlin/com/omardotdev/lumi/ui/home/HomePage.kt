@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.LocalPlatformContext
@@ -36,6 +37,7 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import java.io.File
 import androidx.core.net.toUri
+import com.omardotdev.lumi.R
 
 @Composable
 fun HomePage() {
@@ -94,7 +96,7 @@ fun HomePage() {
         }
 
         Text(
-            "Welcome to Lumi! The cutest cat client for showing cat photos, There will be 2 buttons for either downloading or refreshing the image, and on top will be Minky.",
+            stringResource(R.string.home_text),
             fontSize = 16.sp
         )
     }

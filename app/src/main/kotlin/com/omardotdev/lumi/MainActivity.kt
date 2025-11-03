@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -43,7 +44,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.omardotdev.lumi.ui.home.HomePage
-import com.omardotdev.lumi.ui.settings.AboutPage
+import com.omardotdev.lumi.ui.about.AboutPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +90,18 @@ class MainActivity : ComponentActivity() {
         NavHost(
             navController,
             startDestination = startDestination.route,
+
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            }
+
         ) {
             Destination.entries.forEach { destination ->
                 composable(destination.route) {

@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Lumi</string>
-    <string name="action_settings">Settings</string>
+    <string name="home_text">Welcome to Lumi! The cutest cat client for showing cat photos, There will be 2 buttons for either downloading or refreshing the image, and on top will be Minky.</string>
 </resources>
