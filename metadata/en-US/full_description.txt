@@ -1,0 +1,5 @@
+Fetch cat photos of Minky, that you can download or refresh for another image :)
+
+Permissions:
+
+- Network access: For fetching Minky

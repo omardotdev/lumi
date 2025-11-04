@@ -7,14 +7,13 @@ plugins {
 android {
     namespace = "com.omardotdev.lumi"
     compileSdk = 36
-    version = "1.1.2"
 
     defaultConfig {
         applicationId = "com.omardotdev.lumi"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "1.1.2"
+        versionName = "1.1.3"
     }
 
     dependenciesInfo {
@@ -79,5 +78,4 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
-    implementation(libs.androidx.navigation.dynamic.features.fragment)
 }
