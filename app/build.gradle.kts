@@ -12,8 +12,8 @@ android {
         applicationId = "com.omardotdev.lumi"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.1.3"
+        versionCode = 6
+        versionName = "1.1.4"
     }
 
     dependenciesInfo {
