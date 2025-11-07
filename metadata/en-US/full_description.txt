@@ -5,4 +5,5 @@ Permissions:
 - Network access: For fetching Minky
 
 (On old android versions)
+
 - Storage access: For downloading Minky, This permission can be granted in Settings
