@@ -10,19 +10,28 @@
 
 package com.omardotdev.lumi.ui.home
 
+import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,8 +46,12 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import java.io.File
 import androidx.core.net.toUri
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.omardotdev.lumi.R
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomePage() {
     val sizeResolver = rememberConstraintsSizeResolver()
@@ -79,19 +92,33 @@ fun HomePage() {
                 .background(MaterialTheme.colorScheme.surfaceContainer)
         )
 
+
         Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .padding(0.dp, 8.dp, 0.dp, 8.dp)
         ) {
             val ctx = LocalContext.current
+            val permissionsDialog = remember { mutableStateOf(false) }
+            val higherThanRedVelvetCake = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+            val hasPermission = rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+            if (permissionsDialog.value) PermissionDialog(permissionsDialog)
 
             FilledTonalButton(onClick = { painter.restart() }) {
-                Text("Refresh")
+                Text(stringResource(R.string.refresh))
             }
 
-            FilledTonalButton(onClick = { downloadImage(ctx) }) {
-                Text("Download")
+            FilledTonalButton(
+                onClick = {
+                    if (hasPermission.status.isGranted && !higherThanRedVelvetCake || !hasPermission.status.isGranted && higherThanRedVelvetCake) {
+                        downloadImage(ctx)
+                    } else {
+                        permissionsDialog.value = true
+                    }
+                }
+            ) {
+                Text(stringResource(R.string.download))
             }
         }
 
@@ -120,4 +147,51 @@ private fun downloadImage(context: Context) {
     } catch (e: Exception) {
         Log.d("Lumi", "Failed to download image :(", e)
     }
+}
+
+@Composable
+fun PermissionDialog(shouldShowDialog: MutableState<Boolean>) {
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) shouldShowDialog.value = false
+    }
+
+    AlertDialog(
+        icon = {
+            Icon(Icons.Default.Info, contentDescription = "Info")
+        },
+
+        title = {
+            Text(stringResource(R.string.no_permissions))
+        },
+
+        text = {
+            Text(stringResource(R.string.grant_permission))
+        },
+
+        onDismissRequest = {
+            shouldShowDialog.value = false
+        },
+
+        confirmButton = {
+            Button(
+                onClick = {
+                    launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
+            ) {
+                Text(stringResource(R.string.grant))
+            }
+        },
+
+        dismissButton = {
+            FilledTonalButton(
+                onClick = {
+                    shouldShowDialog.value = false
+                }
+            ) {
+                Text(stringResource(R.string.dismiss))
+            }
+        }
+    )
 }

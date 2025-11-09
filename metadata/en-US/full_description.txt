@@ -4,5 +4,4 @@ Permissions:
 
 - Network access: For fetching Minky
 
-(On old android versions)
-- Storage access: For downloading Minky, This permission can be granted in Settings
+- Storage access: For downloading Minky, This permission can be granted in Settings. (This is only required if you're on Android 11 and lower, Android 12 and higher can write to the Pictures folder.)

@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Lumi</string>
     <string name="home_text">Welcome to Lumi! The cutest cat client for showing cat photos, There will be 2 buttons for either downloading or refreshing the image, and on top will be Minky.</string>
+    <string name="grant_permission">"Lumi doesn't have permission to save Minky to storage, Please grant permission to write to the Pictures folder.</string>
+    <string name="refresh">Refresh</string>
+    <string name="download">Download</string>
+    <string name="grant">Grant</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="no_permissions">No permissions :(</string>
+    <string name="image_error">Failed to download image :(</string>
 </resources>
