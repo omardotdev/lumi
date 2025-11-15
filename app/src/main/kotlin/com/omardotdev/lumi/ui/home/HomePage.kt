@@ -77,25 +77,21 @@ fun HomePage() {
                 .padding(0.dp, 16.dp, 0.dp, 16.dp)
         )
 
-        Surface(
-            tonalElevation = 2.dp,
-            shadowElevation = 2.dp
-        ) {
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier
-                    .then(sizeResolver)
-                    .aspectRatio(1f)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp)
-                    )
-                    .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainer)
-            )
-        }
+        Image(
+            painter = painter,
+            contentDescription = null,
+            modifier = Modifier
+                .then(sizeResolver)
+                .aspectRatio(1f)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp)
+                )
+                .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+        )
+
 
 
         Row(
