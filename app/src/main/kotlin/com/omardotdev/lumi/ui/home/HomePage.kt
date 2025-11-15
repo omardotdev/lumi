@@ -77,20 +77,25 @@ fun HomePage() {
                 .padding(0.dp, 16.dp, 0.dp, 16.dp)
         )
 
-        Image(
-            painter = painter,
-            contentDescription = null,
-            modifier = Modifier
-                .then(sizeResolver)
-                .aspectRatio(1f)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp)
-                )
-                .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
-                .background(MaterialTheme.colorScheme.surfaceContainer)
-        )
+        Surface(
+            tonalElevation = 2.dp,
+            shadowElevation = 2.dp
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier
+                    .then(sizeResolver)
+                    .aspectRatio(1f)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp)
+                    )
+                    .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
+            )
+        }
 
 
         Row(
@@ -100,7 +105,7 @@ fun HomePage() {
         ) {
             val ctx = LocalContext.current
             val permissionsDialog = remember { mutableStateOf(false) }
-            val higherThanRedVelvetCake = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+            val higherThanOrRedVelvetCake = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
             val hasPermission = rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
             if (permissionsDialog.value) PermissionDialog(permissionsDialog)
@@ -111,7 +116,7 @@ fun HomePage() {
 
             FilledTonalButton(
                 onClick = {
-                    if (hasPermission.status.isGranted && !higherThanRedVelvetCake || !hasPermission.status.isGranted && higherThanRedVelvetCake) {
+                    if (hasPermission.status.isGranted && !higherThanOrRedVelvetCake || !hasPermission.status.isGranted && higherThanOrRedVelvetCake) {
                         downloadImage(ctx)
                     } else {
                         permissionsDialog.value = true
@@ -132,10 +137,9 @@ fun HomePage() {
 private fun downloadImage(context: Context) {
     try {
         val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val downloadUri: Uri? = "https://minky.materii.dev".toUri()
+        val downloadUri: Uri = "https://minky.materii.dev".toUri()
         val request = DownloadManager.Request(downloadUri)
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-            .setAllowedOverRoaming(false)
             .setTitle("minky")
             .setMimeType("image/jpeg")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
