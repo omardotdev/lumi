@@ -19,39 +19,50 @@ import android.os.Environment
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.compose.rememberConstraintsSizeResolver
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
-import java.io.File
-import androidx.core.net.toUri
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.omardotdev.lumi.R
+import java.io.File
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage() {
     val sizeResolver = rememberConstraintsSizeResolver()
@@ -64,69 +75,73 @@ fun HomePage() {
             .build()
     )
 
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start,
-        modifier = Modifier
-            .padding(16.dp, 32.dp, 16.dp, 16.dp)
-    ) {
-        Text(
-            "Home",
-            fontSize = 24.sp,
-            modifier = Modifier
-                .padding(0.dp, 16.dp, 0.dp, 16.dp)
-        )
-
-        Image(
-            painter = painter,
-            contentDescription = null,
-            modifier = Modifier
-                .then(sizeResolver)
-                .aspectRatio(1f)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp)
-                )
-                .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
-                .background(MaterialTheme.colorScheme.surfaceContainer)
-        )
-
-
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .padding(0.dp, 8.dp, 0.dp, 8.dp)
-        ) {
-            val ctx = LocalContext.current
-            val permissionsDialog = remember { mutableStateOf(false) }
-            val higherThanOrRedVelvetCake = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
-            val hasPermission = rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-            if (permissionsDialog.value) PermissionDialog(permissionsDialog)
-
-            FilledTonalButton(onClick = { painter.restart() }) {
-                Text(stringResource(R.string.refresh))
-            }
-
-            FilledTonalButton(
-                onClick = {
-                    if (hasPermission.status.isGranted && !higherThanOrRedVelvetCake || !hasPermission.status.isGranted && higherThanOrRedVelvetCake) {
-                        downloadImage(ctx)
-                    } else {
-                        permissionsDialog.value = true
-                    }
-                }
-            ) {
-                Text(stringResource(R.string.download))
-            }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Home") }
+            )
         }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding(),
+                    start = 16.dp,
+                    end = 16.dp
+                )
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier
+                    .then(sizeResolver)
+                    .aspectRatio(1f)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp)
+                    )
+                    .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
+            )
 
-        Text(
-            stringResource(R.string.home_text),
-            fontSize = 16.sp
-        )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .padding(0.dp, 8.dp, 0.dp, 8.dp)
+            ) {
+                val ctx = LocalContext.current
+                val permissionsDialog = remember { mutableStateOf(false) }
+                val higherThanOrRedVelvetCake = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                val hasPermission =
+                    rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+                if (permissionsDialog.value) PermissionDialog(permissionsDialog)
+
+                FilledTonalButton(onClick = { painter.restart() }) {
+                    Text(stringResource(R.string.refresh))
+                }
+
+                FilledTonalButton(
+                    onClick = {
+                        if (hasPermission.status.isGranted && !higherThanOrRedVelvetCake || !hasPermission.status.isGranted && higherThanOrRedVelvetCake) {
+                            downloadImage(ctx)
+                        } else {
+                            permissionsDialog.value = true
+                        }
+                    }
+                ) {
+                    Text(stringResource(R.string.download))
+                }
+            }
+
+            Text(
+                stringResource(R.string.home_text),
+                fontSize = 16.sp
+            )
+        }
     }
 }
 
