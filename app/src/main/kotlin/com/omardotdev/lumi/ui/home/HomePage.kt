@@ -1,6 +1,6 @@
 /*
- * Lumi :3
- * Copyright (C) 2025 Omar
+ * Lumi
+ * Copyright (C) 2026 Omar
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,11 +12,15 @@ package com.omardotdev.lumi.ui.home
 
 import android.Manifest
 import android.app.DownloadManager
+import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -46,21 +50,30 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import coil3.compose.AsyncImagePainter
+import coil3.compose.ImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.compose.rememberConstraintsSizeResolver
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.toBitmap
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.omardotdev.lumi.R
 import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -127,7 +140,7 @@ fun HomePage() {
                 FilledTonalButton(
                     onClick = {
                         if (hasPermission.status.isGranted && !higherThanOrRedVelvetCake || !hasPermission.status.isGranted && higherThanOrRedVelvetCake) {
-                            downloadImage(ctx)
+                            downloadImage(ctx, painter)
                         } else {
                             permissionsDialog.value = true
                         }
@@ -145,22 +158,30 @@ fun HomePage() {
     }
 }
 
-private fun downloadImage(context: Context) {
-    try {
-        val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val downloadUri: Uri = "https://minky.materii.dev".toUri()
-        val request = DownloadManager.Request(downloadUri)
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-            .setTitle("minky")
-            .setMimeType("image/jpeg")
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_PICTURES,
-                File.separator + "minky.jpg"
-            )
-        dm.enqueue(request)
-    } catch (e: Exception) {
-        Log.d("Lumi", "Failed to download image :(", e)
+private fun downloadImage(context: Context, painter: AsyncImagePainter) {
+    val imageState = painter.state.value
+
+    if (imageState is AsyncImagePainter.State.Success) {
+        try {
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, "Minky.jpg")
+                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + "Minky")
+            }
+
+            val imageUri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+            imageUri?.let { uri ->
+                context.contentResolver.openOutputStream(uri).use { stream ->
+                    if (stream != null) {
+                        imageState.result.image.toBitmap().compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                        Toast.makeText(context, "Minky saved to Pictures folder", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.d("Lumi", "Failed to download image :(", e)
+        }
     }
 }
 

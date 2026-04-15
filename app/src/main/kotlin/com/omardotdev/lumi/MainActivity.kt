@@ -1,6 +1,6 @@
 /*
- * Lumi :3
- * Copyright (C) 2025 Omar
+ * Lumi
+ * Copyright (C) 2026 Omar
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,100 +50,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val colors =
-                if (isSystemInDarkTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    dynamicDarkColorScheme(LocalContext.current)
-                } else if (!isSystemInDarkTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    dynamicLightColorScheme(LocalContext.current)
-                } else if (isSystemInDarkTheme()) {
-                    darkColorScheme()
-                } else {
-                    lightColorScheme()
-                }
+            val colors = when {
+                isSystemInDarkTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(LocalContext.current)
+                !isSystemInDarkTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicLightColorScheme(LocalContext.current)
+                isSystemInDarkTheme() -> darkColorScheme()
+                else -> lightColorScheme()
+            }
 
             MaterialTheme(
                 colorScheme = colors
             ) {
-                NavigationBar()
+                App()
             }
-        }
-
-    }
-
-    enum class Destination(
-        val route: String,
-        val label: String,
-        val icon: ImageVector,
-        val contentDescription: String
-    ) {
-        HOME("home", "Home", Icons.Default.Home, "Home"),
-        ABOUT("about", "About", Icons.Default.Info, "About"),
-    }
-
-
-    @Composable
-    fun AppNavHost(
-        navController: NavHostController,
-        startDestination: Destination,
-        modifier: Modifier = Modifier
-    ) {
-        NavHost(
-            navController,
-            startDestination = startDestination.route,
-
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left
-                )
-            }
-
-        ) {
-            Destination.entries.forEach { destination ->
-                composable(destination.route) {
-                    when (destination) {
-                        Destination.HOME -> HomePage()
-                        Destination.ABOUT -> AboutPage()
-                    }
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun NavigationBar() {
-        val navController = rememberNavController()
-        val startDestination = Destination.HOME
-        var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
-
-        Scaffold(
-            bottomBar = {
-                NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
-                    Destination.entries.forEachIndexed { index, destination ->
-                        NavigationBarItem(
-                            selected = selectedDestination == index,
-                            onClick = {
-                                navController.navigate(route = destination.route)
-                                selectedDestination = index
-                            },
-                            icon = {
-                                Icon(
-                                    destination.icon,
-                                    contentDescription = destination.contentDescription
-                                )
-                            },
-                            label = { Text(destination.label) }
-                        )
-                    }
-
-                }
-            }
-        ) { contentPadding ->
-            AppNavHost(navController, startDestination, modifier = Modifier.padding(contentPadding))
         }
     }
 }
