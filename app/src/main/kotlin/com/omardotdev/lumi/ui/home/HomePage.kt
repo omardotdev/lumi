@@ -71,16 +71,8 @@ import java.io.File
 @Composable
 fun HomePage() {
     val sizeResolver = rememberConstraintsSizeResolver()
-    /* val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalPlatformContext.current)
-            .data("https://minky.materii.dev")
-            .diskCachePolicy(CachePolicy.DISABLED)
-            .memoryCachePolicy(CachePolicy.DISABLED)
-            .size(sizeResolver)
-            .build()
-    ) */
     var bitmap: Bitmap? = null
-    var refreshImage = remember { mutableStateOf(false) }
+    val refreshImage = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
