@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.omardotdev.lumi.BuildConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +51,7 @@ fun AboutPage() {
             )
 
             Text(
-                "Version: 1.2.0\nAndroid Version/API Level: ${Build.VERSION.SDK_INT}\nSupports Dynamic colors: $supportsDynamicColors\nMade by Omar (omardotdev)",
+                "Version: ${BuildConfig.VERSION}\nAndroid Version/API Level: ${Build.VERSION.SDK_INT}\nSupports Dynamic colors: $supportsDynamicColors\nMade by Omar (omardotdev)",
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

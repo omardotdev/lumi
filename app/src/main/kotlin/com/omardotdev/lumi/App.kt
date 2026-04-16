@@ -54,7 +54,6 @@ fun AppNavHost(
     NavHost(
         navController,
         startDestination = startDestination.route,
-
         enterTransition = {
             slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Right,
@@ -64,8 +63,8 @@ fun AppNavHost(
             slideOutOfContainer(
                 AnimatedContentTransitionScope.SlideDirection.Left
             )
-        }
-
+        },
+        modifier = modifier
     ) {
         Destination.entries.forEach { destination ->
             composable(destination.route) {
