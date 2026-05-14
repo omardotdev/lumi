@@ -1,18 +1,19 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 android {
     namespace = "com.omardotdev.lumi"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.omardotdev.lumi"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 12
-        versionName = "1.2.2"
+        targetSdk = 37
+        versionCode = 13
+        versionName = "1.2.3"
     }
 
     dependenciesInfo {
@@ -59,13 +60,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.material)
     implementation(libs.androidx.material3)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.material.icons.core)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.navigation.ui)
     implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.kotlinx.serialization.core)
 }

@@ -36,6 +36,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -45,9 +46,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,12 +70,20 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.omardotdev.lumi.R
 import java.io.File
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 @Composable
 fun HomePage() {
     val sizeResolver = rememberConstraintsSizeResolver()
     var bitmap: Bitmap? = null
     val refreshImage = remember { mutableStateOf(false) }
+    val ctx = LocalContext.current
+    val permissionsDialog = remember { mutableStateOf(false) }
+    val higherThanOrRedVelvetCake = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+    val hasPermission = rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    var imageIsLoaded by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -102,28 +113,31 @@ fun HomePage() {
                     .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
                     .background(MaterialTheme.colorScheme.surfaceContainer),
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    key(refreshImage.value) {
-                        SubcomposeAsyncImage(
-                            model = ImageRequest.Builder(LocalPlatformContext.current)
-                                .data("https://minky.materii.dev")
-                                .diskCachePolicy(CachePolicy.DISABLED)
-                                .memoryCachePolicy(CachePolicy.DISABLED)
-                                .size(sizeResolver)
-                                .build(),
-                            contentDescription = null,
-                            loading = { ContainedLoadingIndicator() },
-                            onSuccess = { state ->
-                                bitmap = state.result.image.toBitmap()
+                key(refreshImage.value) {
+                    SubcomposeAsyncImage(
+                        model = ImageRequest.Builder(LocalPlatformContext.current)
+                            .data("https://minky.materii.dev")
+                            .diskCachePolicy(CachePolicy.DISABLED)
+                            .memoryCachePolicy(CachePolicy.DISABLED)
+                            .size(sizeResolver)
+                            .build(),
+                        contentDescription = null,
+                        loading = {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                ContainedLoadingIndicator()
                             }
-                        )
+                        },
+                        onSuccess = { state ->
+                            bitmap = state.result.image.toBitmap()
+                            imageIsLoaded = true
+                        }
+                    )
 
-                        refreshImage.value = false
-                    }
+                    refreshImage.value = false
                 }
             }
 
@@ -132,15 +146,15 @@ fun HomePage() {
                 modifier = Modifier
                     .padding(0.dp, 8.dp, 0.dp, 8.dp)
             ) {
-                val ctx = LocalContext.current
-                val permissionsDialog = remember { mutableStateOf(false) }
-                val higherThanOrRedVelvetCake = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
-                val hasPermission =
-                    rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
                 if (permissionsDialog.value) PermissionDialog(permissionsDialog)
 
-                FilledTonalButton(onClick = { refreshImage.value = true }) {
+                FilledTonalButton(
+                    onClick = {
+                        refreshImage.value = true
+                        imageIsLoaded = false
+                    },
+                    enabled = imageIsLoaded
+                ) {
                     Text(stringResource(R.string.refresh))
                 }
 
@@ -151,7 +165,8 @@ fun HomePage() {
                         } else {
                             permissionsDialog.value = true
                         }
-                    }
+                    },
+                    enabled = imageIsLoaded
                 ) {
                     Text(stringResource(R.string.download))
                 }

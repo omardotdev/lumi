@@ -1,7 +1,7 @@
-Fetch cat photos of Minky, that you can download or refresh for another image :)
+Fetch cat photos of Minky, that you can download or refresh for another Minky image :)
 
 Permissions:
 
 - Network access: For fetching Minky
 
-- Storage access: For downloading Minky, This permission can be granted in Settings. (This is only required if you're on Android 10 and lower, Android 11 and higher can write to the Pictures folder.)
+- Storage access: For downloading Minky, This permission can be granted in Settings. (This is only required if you're on Android 10 and lower, Android 11 and higher can write to the Pictures folder)

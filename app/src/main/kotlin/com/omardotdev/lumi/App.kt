@@ -9,7 +9,7 @@
 */
 package com.omardotdev.lumi
 
-import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -21,77 +21,68 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.ui.NavDisplay.transitionSpec
+import com.omardotdev.lumi.navigation.Navigator
+import com.omardotdev.lumi.navigation.rememberNavigationState
+import com.omardotdev.lumi.navigation.toEntries
 import com.omardotdev.lumi.ui.about.AboutPage
 import com.omardotdev.lumi.ui.home.HomePage
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed class Screen : NavKey {
+    @Serializable
+    data object Home : NavKey
+    @Serializable
+    data object About : NavKey
+}
 
 enum class Destination(
-    val route: String,
+    val route: NavKey,
     val label: String,
     val icon: ImageVector,
     val contentDescription: String
 ) {
-    HOME("home", "Home", Icons.Default.Home, "Home"),
-    ABOUT("about", "About", Icons.Default.Info, "About"),
-}
-
-
-@Composable
-fun AppNavHost(
-    navController: NavHostController,
-    startDestination: Destination,
-    modifier: Modifier = Modifier
-) {
-    NavHost(
-        navController,
-        startDestination = startDestination.route,
-        enterTransition = {
-            slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.Right,
-            )
-        },
-        exitTransition = {
-            slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.Left
-            )
-        },
-        modifier = modifier
-    ) {
-        Destination.entries.forEach { destination ->
-            composable(destination.route) {
-                when (destination) {
-                    Destination.HOME -> HomePage()
-                    Destination.ABOUT -> AboutPage()
-                }
-            }
-        }
-    }
+    HOME(Screen.Home, "Home", Icons.Default.Home, "Home"),
+    ABOUT(Screen.About, "About", Icons.Default.Info, "About"),
 }
 
 @Composable
 fun App() {
-    val navController = rememberNavController()
-    val startDestination = Destination.HOME
-    var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
+    val routes = setOf(Screen.Home, Screen.About)
+    val navigationState = rememberNavigationState(
+        startRoute = Screen.Home,
+        topLevelRoutes = routes
+    )
+    val navigator = remember { Navigator(navigationState) }
+    val entryProvider = entryProvider {
+        entry<Screen.Home> {
+            HomePage()
+        }
+
+        entry<Screen.About> {
+            AboutPage()
+        }
+    }
+
+    var selectedDestination = navigationState.backStacks[navigationState.topLevelRoute]?.last()
 
     Scaffold(
         bottomBar = {
             NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
-                Destination.entries.forEachIndexed { index, destination ->
+                Destination.entries.forEach { destination ->
                     NavigationBarItem(
-                        selected = selectedDestination == index,
+                        selected = selectedDestination == destination.route,
                         onClick = {
-                            navController.navigate(route = destination.route)
-                            selectedDestination = index
+                            navigator.navigate(destination.route)
+                            selectedDestination = destination.route
                         },
                         icon = {
                             Icon(
@@ -102,10 +93,14 @@ fun App() {
                         label = { Text(destination.label) }
                     )
                 }
-
             }
         }
     ) { contentPadding ->
-        AppNavHost(navController, startDestination, modifier = Modifier.padding(contentPadding))
+        NavDisplay(
+            modifier = Modifier.padding(contentPadding),
+            entries = navigationState.toEntries(entryProvider),
+            onBack = { navigator.goBack() },
+            sceneStrategies = remember { listOf(DialogSceneStrategy()) }
+        )
     }
 }

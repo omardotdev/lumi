@@ -1,1 +1,1 @@
-A cute cat client, for fetching cat photos of Minky.
+A cute cat app, for fetching cat photos of Minky.
