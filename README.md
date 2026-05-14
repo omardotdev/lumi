@@ -7,8 +7,8 @@
 The cutest cat client for showing photos of Minky :3, Built with Kotlin and [Jetpack Compose](https://developer.android.com/jetpack/compose).
 
 ### Preview
-<img width="350" height="777" alt="image" src="https://github.com/user-attachments/assets/215cdfb8-2daf-4049-bb21-9c9392e6fc72" />
-<img width="350" height="777" alt="image" src="https://github.com/user-attachments/assets/12872aaa-2910-47ac-8766-ba803e865485" />
+<img width="350" height="777" alt="image" src="./metadata/en-US/images/phoneScreenshots/1.png" />
+<img width="350" height="777" alt="image" src="./metadata/en-US/images/phoneScreenshots/2.png" />
 
 ### Requirements
 - Android 7.0 and upper
