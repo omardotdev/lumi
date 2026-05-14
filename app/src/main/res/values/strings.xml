@@ -7,5 +7,4 @@
     <string name="grant">Grant</string>
     <string name="dismiss">Dismiss</string>
     <string name="no_permissions">No permissions :(</string>
-    <string name="image_error">Failed to download image :(</string>
 </resources>

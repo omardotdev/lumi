@@ -3,7 +3,7 @@
     <style name="Base.Theme.Lumi" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <!-- Base application theme. -->c
+        <!-- Base application theme. -->
     </style>
 
     <style name="ActionBar" parent="@style/Widget.AppCompat.ActionBar">
