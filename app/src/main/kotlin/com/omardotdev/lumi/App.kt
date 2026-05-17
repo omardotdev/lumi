@@ -9,7 +9,6 @@
 */
 package com.omardotdev.lumi
 
-import androidx.compose.animation.ContentTransform
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -28,7 +27,6 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.NavDisplay.transitionSpec
 import com.omardotdev.lumi.navigation.Navigator
 import com.omardotdev.lumi.navigation.rememberNavigationState
 import com.omardotdev.lumi.navigation.toEntries
