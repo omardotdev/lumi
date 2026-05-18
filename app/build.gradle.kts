@@ -12,8 +12,8 @@ android {
         applicationId = "com.omardotdev.lumi"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 14
-        versionName = "1.2.4"
+        versionCode = 15
+        versionName = "1.3.0"
     }
 
     dependenciesInfo {
@@ -51,10 +51,7 @@ android {
 dependencies {
     // Compose/Material packages
     implementation(libs.androidx.ui)
-    implementation(libs.androidx.navigation.compose)
     implementation(platform(libs.compose.bom))
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.material3)
 
     // Coil
@@ -62,7 +59,6 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     // Icons and accompanist
-    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.material.icons.core)
     implementation(libs.accompanist.permissions)
 
