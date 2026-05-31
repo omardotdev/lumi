@@ -10,9 +10,6 @@
 package com.omardotdev.lumi
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
@@ -22,7 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -45,11 +42,11 @@ sealed class Screen : NavKey {
 enum class Destination(
     val route: NavKey,
     val label: String,
-    val icon: ImageVector,
+    val icon: Int,
     val contentDescription: String
 ) {
-    HOME(Screen.Home, "Home", Icons.Default.Home, "Home"),
-    ABOUT(Screen.About, "About", Icons.Default.Info, "About"),
+    HOME(Screen.Home, "Home", R.drawable.ic_home, "Home"),
+    ABOUT(Screen.About, "About", R.drawable.ic_info, "About"),
 }
 
 @Composable
@@ -84,7 +81,7 @@ fun App() {
                         },
                         icon = {
                             Icon(
-                                destination.icon,
+                                painterResource(destination.icon),
                                 contentDescription = destination.contentDescription
                             )
                         },

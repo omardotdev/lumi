@@ -51,15 +51,13 @@ android {
 dependencies {
     // Compose/Material packages
     implementation(libs.androidx.ui)
-    implementation(platform(libs.compose.bom))
     implementation(libs.androidx.material3)
 
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    // Icons and accompanist
-    implementation(libs.androidx.material.icons.core)
+    // Accompanist
     implementation(libs.accompanist.permissions)
 
     // Navigation 3
