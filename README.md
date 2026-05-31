@@ -4,7 +4,7 @@
     <span>Lumi</span>
 </h1>
 
-The cutest cat client for showing photos of Minky :3, Built with Kotlin and [Jetpack Compose](https://developer.android.com/jetpack/compose).
+The cutest cat app for showing photos of Minky :3, Built with Kotlin and [Jetpack Compose](https://developer.android.com/jetpack/compose).
 
 ### Preview
 <img width="350" height="777" alt="image" src="./metadata/en-US/images/phoneScreenshots/1.png" />
